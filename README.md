@@ -1,6 +1,14 @@
 # 🏰 Stronghold Toast
 
-A framework-agnostic, medieval-themed toast notification Web Component. Bring the tactile, auditory feedback of classic RTS games into your modern web applications.
+[![npm version](https://img.shields.io/npm/v/stronghold-toast.svg)](https://www.npmjs.com/package/stronghold-toast)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A framework-agnostic, medieval-themed toast notification Web Component. Bring the tactile, auditory feedback of classic RTS games into your modern web applications. 
+
+![Stronghold Toast Demo](https://github.com/user-attachments/assets/d194783e-3cfd-490d-b46a-675a048156d8)
+
+<img width="845" height="909" alt="Image" src="https://github.com/user-attachments/assets/e7bdc595-ea9d-4617-b007-335e90afbace" />
+
 
 ## ✨ Features
 
