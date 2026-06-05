@@ -1,0 +1,18 @@
+# 1. Proprietary Assets (CRITICAL for Legal Compliance)
+raw_audio_files/
+src/assets/sounds/
+
+# 2. Local Configuration & Fallbacks
+sounds.json
+
+# 3. Development Environments & Demos
+demo/
+
+# 4. Pipeline Automation Tooling
+scripts/
+
+# 5. Editor & OS Specific Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stronghold Toast | Interactive Demo</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --panel-bg: #2d2d2d;
+            --text-main: #e0e0e0;
+            --parchment: #f4e4bc;
+            --wood: #5c3a21;
+            --accent: #d4af37; /* Gold */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard {
+            background-color: var(--panel-bg);
+            border: 2px solid var(--wood);
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: var(--accent);
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            margin-top: 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 15px;
+        }
+
+        .control-group {
+            background: #252525;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--wood);
+        }
+
+        .control-group h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        select, input[type="range"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            background: #111;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .help-text {
+            color: #888;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        button {
+            background-color: var(--parchment);
+            color: var(--wood);
+            border: 2px solid var(--wood);
+            padding: 10px 15px;
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #ffeebf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .btn-success { border-left: 6px solid #2e7d32; }
+        .btn-warning { border-left: 6px solid #f57f17; }
+        .btn-error { border-left: 6px solid #c62828; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <h1>🏰 Stronghold Component API</h1>
+
+        <div class="control-group">
+            <h3>⚖️ Asset Registry (BYOA)</h3>
+            <label for="registry-path">Path to your sounds.json:</label>
+            <input type="text" id="registry-path" value="../src/assets/sounds.json">
+            <span class="help-text">Provide the path to your legally obtained audio registry. Leave blank or use a bad path to test silent fallback.</span>
+        </div>
+
+        <div class="control-group">
+            <h3>⚙️ Global Settings</h3>
+            
+            <label for="lang-select">Language (i18n):</label>
+            <select id="lang-select">
+                <option value="en">English (EN)</option>
+                <option value="hu">Hungarian (HU)</option>
+            </select>
+
+            <label for="duration-slider">Toast Duration (<span id="duration-val">4000</span>ms):</label>
+            <input type="range" id="duration-slider" min="1000" max="10000" step="500" value="4000">
+        </div>
+
+        <div class="control-group">
+            <h3>📜 Standard Semantic Notifications</h3>
+            <div class="btn-grid">
+                <button class="btn-success" onclick="spawnToast('success', 'The granary is full, Sire.')">Trigger Success</button>
+                <button class="btn-warning" onclick="spawnToast('warning', 'Not enough wood, m\'lord!')">Trigger Warning</button>
+                <button class="btn-error" onclick="spawnToast('error', 'We are under attack!')">Trigger Error</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>🗡️ Advanced API: Trigger Specific Sound</h3>
+            <label for="custom-message">Custom Scribe Message:</label>
+            <input type="text" id="custom-message" value="Taxes have been raised!">
+
+            <label for="sound-key-select">Select Specific Sound Key (Loaded from Registry):</label>
+            <select id="sound-key-select">
+                <option value="">Loading sounds...</option>
+            </select>
+
+            <button style="width: 100%; margin-top: 10px;" onclick="spawnCustomToast()">Dispatch Custom Courier</button>
+        </div>
+    </div>
+
+    <script type="module" src="../src/stronghold-toast.js"></script>
+
+    <script>
+        // Update slider UI
+        document.getElementById('duration-slider').addEventListener('input', function() {
+            document.getElementById('duration-val').textContent = this.value;
+        });
+
+        // Listen for changes to the registry path to reload the custom trigger dropdown
+        document.getElementById('registry-path').addEventListener('change', loadAvailableSoundKeys);
+
+        // The core spawn function that creates the component programmatically
+        function spawnToast(type, message, customKey = null) {
+            const lang = document.getElementById('lang-select').value;
+            const duration = document.getElementById('duration-slider').value;
+            const registryPath = document.getElementById('registry-path').value;
+            
+            const toast = document.createElement('stronghold-toast');
+            
+            // Pass the BYOA registry path to the component
+            toast.setAttribute('registry', registryPath);
+            toast.setAttribute('type', type);
+            toast.setAttribute('lang', lang);
+            toast.setAttribute('message', message);
+            toast.setAttribute('duration', duration);
+            
+            if (customKey) {
+                toast.setAttribute('sound-key', customKey);
+            }
+            
+            document.body.appendChild(toast);
+        }
+
+        // Wrapper for the custom builder button
+        function spawnCustomToast() {
+            const message = document.getElementById('custom-message').value;
+            const soundKey = document.getElementById('sound-key-select').value;
+            
+            if (!soundKey) {
+                // If it's silent mode, we still spawn the toast, just without a specific sound key
+                spawnToast('warning', message);
+            } else {
+                spawnToast('warning', message, soundKey);
+            }
+        }
+
+        // Dynamically load the specific sound keys from the provided JSON registry
+        async function loadAvailableSoundKeys() {
+            const selectEl = document.getElementById('sound-key-select');
+            const registryPath = document.getElementById('registry-path').value;
+            
+            selectEl.innerHTML = '<option value="">Fetching registry...</option>';
+
+            try {
+                const response = await fetch(registryPath);
+                if (!response.ok) throw new Error('Registry not found');
+                const registry = await response.json();
+                
+                const keys = Object.keys(registry.en || {});
+                
+                if (keys.length === 0) {
+                    throw new Error('Registry is empty');
+                }
+
+                selectEl.innerHTML = ''; // Clear loading text
+                
+                keys.sort().forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key;
+                    selectEl.appendChild(option);
+                });
+            } catch (error) {
+                // Graceful fallback for silent mode
+                selectEl.innerHTML = '<option value="">Audio disabled (Invalid or missing registry)</option>';
+                console.warn("🏰 Demo Dashboard: Audio is operating in silent mode. Ensure the registry path is correct.");
+            }
+        }
+
+        // Initialize the dynamic dropdown on page load
+        window.addEventListener('DOMContentLoaded', loadAvailableSoundKeys);
+    </script>
+</body>
+</html>

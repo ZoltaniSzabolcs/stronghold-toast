@@ -1,0 +1,9 @@
+node_modules/
+.wireit/
+*.tsbuildinfo
+.eslintcache
+
+# Ignore proprietary game assets
+src/assets/sounds/
+raw_audio_files/
+sounds.json

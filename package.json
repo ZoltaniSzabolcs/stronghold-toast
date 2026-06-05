@@ -1,0 +1,29 @@
+{
+  "name": "stronghold-toast",
+  "version": "1.0.0",
+  "description": "A framework-agnostic, medieval-themed Web Component that provides animated toast notifications with integrated, localized audio feedback (English and Hungarian). Inspired by *Stronghold Crusader*.",
+  "main": "stronghold-toast.js",
+  "scripts": {
+    "build:assets": "node scripts/import-audio.js && node scripts/convert-audio.js && node scripts/validate-assets.js && node scripts/generate-registry.js",
+    "import-assets": "node scripts/import-audio.js",
+    "validate-assets": "node scripts/validate-assets.js",
+    "convert-audio": "node scripts/convert-audio.js",
+    "generate-registry": "node scripts/generate-registry.js",
+    "build": "npm run build:assets && vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZoltaniSzabolcs/stronghold-toast.git"
+  },
+  "keywords": [],
+  "author": "Zoltáni Szabolcs",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ZoltaniSzabolcs/stronghold-toast/issues"
+  },
+  "homepage": "https://github.com/ZoltaniSzabolcs/stronghold-toast#readme",
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.3"
+  }
+}
