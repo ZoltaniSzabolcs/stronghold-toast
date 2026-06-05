@@ -7,8 +7,6 @@ A framework-agnostic, medieval-themed toast notification Web Component. Bring th
 
 ![Stronghold Toast Demo](https://github.com/user-attachments/assets/d194783e-3cfd-490d-b46a-675a048156d8)
 
-<img width="845" height="909" alt="Image" src="https://github.com/user-attachments/assets/e7bdc595-ea9d-4617-b007-335e90afbace" />
-
 
 ## ✨ Features
 
